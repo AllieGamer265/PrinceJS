@@ -1,4 +1,4 @@
-# Prince of Persia (1990) port for the web
+# Ahora propiedad de Alice 
 
 Prince of Persia reimplementation written in HTML5/Javascript using assets from the MSDOS version.
 
