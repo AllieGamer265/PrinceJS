@@ -1,4 +1,4 @@
-# Ahora propiedad de Alice 
+# Ahora propiedad de Alie
 
 Prince of Persia reimplementation written in HTML5/Javascript using assets from the MSDOS version.
 
