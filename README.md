@@ -1,26 +1,27 @@
 # Ahora propiedad de Alie
 
-Prince of Persia reimplementation written in HTML5/Javascript using assets from the MSDOS version.
+Reimplementación de Prince of Persia escrita en HTML5/Javascript usando recursos de la versión de MSDOS.
 
-## Play
+## Jugar
 
-- Browser: https://ultrabolido.github.io/PrinceJS/
-- Controls:
-  - `Cursor keys`: prince movement
-  - `SHIFT`: sword/drink potion/grab edges
-  - `ENTER`: continue game after dead
+- **Navegador**: https://ultrabolido.github.io/PrinceJS/
+- **Controles**:
+  - `Teclas de cursor`: mover al príncipe
+  - `SHIFT`: usar espada / beber poción / agarrarse a los bordes
+  - `ENTER`: continuar partida después de morir
 
-## Work in progress
+## Trabajo en progreso
 
-This version is a work in progress. The game is not fully playable because there are bugs and missing functionalities. Specially:
+Esta versión es un trabajo en progreso. El juego no es completamente jugable porque hay errores y funcionalidades faltantes. Especialmente:
 
-- Figthing and guard behaviour needs improvements
-- Drink potion effects limited to recover lives
-- No special events
-- Spikes and choppers doesn't kill 
-- Some bugs on edge grabbing
-- No sound/music
-- No autoplay on demo level
+- El combate y el comportamiento de los guardias necesita mejoras.
+- Los efectos de las pociones se limitan a recuperar vidas.
+- No hay eventos especiales.
+- Las púas y las cuchillas no matan.
+- Algunos errores al agarrarse a los bordes.
+- Sin sonido/música.
+- Sin reproducción automática en el nivel de demostración.
 
-## Credits
-Jordan Mechner for written the original Apple II version and release the [source code](https://github.com/jmechner/Prince-of-Persia-Apple-II)
+## Créditos
+
+A Jordan Mechner por escribir la versión original de Apple II y liberar el [código fuente](https://github.com/jmechner/Prince-of-Persia-Apple-II).
