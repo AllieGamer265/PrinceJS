@@ -32,7 +32,9 @@ class GameScene extends Scene {
         this.sound.stopAll();
         this.sfx = this.sound.addAudioSprite('sounds');
 
-        const json = this.cache.json.get('level' + GameState.currentLevel);
+    // load persisted GameState (shoe color etc.)
+    if (typeof GameState.load === 'function') GameState.load();
+    const json = this.cache.json.get('level' + GameState.currentLevel);
 
         this.specialEvents = new SpecialEvents(this);
 
@@ -61,6 +63,8 @@ class GameScene extends Scene {
         
         
         this.setupCamera(json.prince.room);
+    // apply persisted shoe color if available
+    try { if (this.kid && (typeof this.kid.setShoeColor === 'function')) this.kid.setShoeColor(GameState.kidShoeColor || 0); } catch(e) {}
         
         this.ui = new Interface(this);
         this.ui.setPlayer(this.kid);

@@ -1,4 +1,5 @@
 import { convertX } from '../Utils';
+import GameState from '../ui/GameState';
 
 class Actor extends Phaser.GameObjects.Sprite {
 
@@ -50,6 +51,26 @@ class Actor extends Phaser.GameObjects.Sprite {
         this.registerCommand(0xF2,this.CMD_TAP);
         this.registerCommand(0x00,this.CMD_FRAME);
 
+        // Shoe layer (separate sprite used to render shoes so we can tint or swap frames)
+        try {
+            // prefer an atlas named `${charName}-shoes`, fall back to 'kid-shoes' for compatibility
+            var shoeAtlas = this.charName + '-shoes';
+            var atlasKey = scene.textures.exists(shoeAtlas) ? shoeAtlas : (scene.textures.exists('kid-shoes') ? 'kid-shoes' : null);
+            if (atlasKey) {
+                this.shoe = scene.add.sprite(0,0, atlasKey).setOrigin(0,1);
+                this.shoe.setDepth(this.depth - 0.5);
+                this.shoe.setVisible(false);
+                // default color
+                this.shoeColor = (typeof GameState.kidShoeColor !== 'undefined') ? GameState.kidShoeColor : 0;
+            } else {
+                this.shoe = null;
+                this.shoeColor = 0;
+            }
+        } catch (e) {
+            this.shoe = null;
+            this.shoeColor = 0;
+        }
+
     }
 
     registerCommand(value, fn) {
@@ -96,6 +117,7 @@ class Actor extends Phaser.GameObjects.Sprite {
     
         this.charFace *= -1;
         this.scaleX *= -1;
+        if (this.shoe) this.shoe.scaleX *= -1;
         
     }
     
@@ -155,6 +177,28 @@ class Actor extends Phaser.GameObjects.Sprite {
         
         this.x = this.baseX + convertX( tempx );
         this.y = this.baseY + this.charY + this.charFdy;
+
+        // update shoe position/frame if available
+        if (this.shoe) {
+            // position shoe at same origin as actor; fine-tune offsets later if needed
+            this.shoe.x = this.x;
+            this.shoe.y = this.y;
+            this.shoe.setOrigin(this.originX || 0, this.originY || 1);
+            // try to pick a matching frame from the shoe atlas; if not present, ignore errors
+            try {
+                var shoeFrame = this.charName + '-' + this.charFrame;
+                if (this.shoe.texture.get(shoeFrame)) {
+                    this.shoe.setFrame(shoeFrame);
+                } else if (this.shoe.texture.get(shoeFrame + '-shoe-' + this.shoeColor)) {
+                    this.shoe.setFrame(shoeFrame + '-shoe-' + this.shoeColor);
+                } else {
+                    // fallback: leave current shoe frame
+                }
+                this.shoe.setVisible(this.visible);
+            } catch (e) {
+                // ignore missing frames
+            }
+        }
           
     };
     
@@ -191,6 +235,20 @@ class Actor extends Phaser.GameObjects.Sprite {
     setAction(value) {
         this._action = value;
         this._seqpointer = 0;
+    }
+
+    setShoeColor(colorIndex) {
+        this.shoeColor = colorIndex;
+        if (this.shoe) {
+            // if shoe frames encode color in name, attempt to update frame immediately
+            try {
+                var shoeFrame = this.charName + '-' + this.charFrame + '-shoe-' + this.shoeColor;
+                if (this.shoe.texture.get(shoeFrame)) this.shoe.setFrame(shoeFrame);
+                else if (this.shoe.texture.get(this.charName + '-' + this.charFrame)) this.shoe.setFrame(this.charName + '-' + this.charFrame);
+            } catch (e) {}
+        }
+        // persist to GameState when possible
+        try { if (typeof GameState !== 'undefined') { GameState.kidShoeColor = colorIndex; if (typeof GameState.save === 'function') GameState.save(); } } catch(e) {}
     }
 
     remove() {
