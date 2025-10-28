@@ -59,12 +59,24 @@ class Actor extends Phaser.GameObjects.Sprite {
             if (atlasKey) {
                 this.shoe = scene.add.sprite(0,0, atlasKey).setOrigin(0,1);
                 this.shoe.setDepth(this.depth - 0.5);
-                this.shoe.setVisible(false);
                 // default color
                 this.shoeColor = (typeof GameState.kidShoeColor !== 'undefined') ? GameState.kidShoeColor : 0;
+
+                // detect whether the atlas actually contains dedicated shoe frames
+                try {
+                    var frameNames = scene.textures.get(atlasKey).getFrameNames();
+                    // consider atlas "real" if any frame name contains '-shoe-'
+                    this.shoeIsReal = frameNames.some(n => n.indexOf('-shoe-') !== -1);
+                } catch (e) {
+                    this.shoeIsReal = false;
+                }
+
+                // if it's not a real shoe atlas (placeholder), keep it hidden to avoid rendering a duplicate full actor
+                this.shoe.setVisible(!!this.shoeIsReal);
             } else {
                 this.shoe = null;
                 this.shoeColor = 0;
+                this.shoeIsReal = false;
             }
         } catch (e) {
             this.shoe = null;
@@ -178,8 +190,8 @@ class Actor extends Phaser.GameObjects.Sprite {
         this.x = this.baseX + convertX( tempx );
         this.y = this.baseY + this.charY + this.charFdy;
 
-        // update shoe position/frame if available
-        if (this.shoe) {
+        // update shoe position/frame if available and real
+        if (this.shoe && this.shoeIsReal) {
             // position shoe at same origin as actor; fine-tune offsets later if needed
             this.shoe.x = this.x;
             this.shoe.y = this.y;
