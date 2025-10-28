@@ -16,11 +16,12 @@ class PreloadScene extends Scene {
         // graphics
         this.load.atlas('kid','assets/gfx/kid.png','assets/gfx/kid.json');
     // shoes layer for kid (single-frame or per-frame shoe assets)
-    this.load.atlas('kid-shoes','assets/gfx/kid-shoes.png','assets/gfx/kid-shoes.json');
+    // If a dedicated kid-shoes atlas isn't available yet, use the existing kid atlas as a safe placeholder.
+    this.load.atlas('kid-shoes','assets/gfx/kid.png','assets/gfx/kid.json');
         this.load.atlas('princess','assets/gfx/princess.png','assets/gfx/princess.json');
         this.load.atlas('vizier','assets/gfx/vizier.png','assets/gfx/vizier.json');
         this.load.atlas('mouse','assets/gfx/mouse.png','assets/gfx/mouse.json');
-        this.load.atlas('guard','assets/gfx/guard.png','assets/gfx/guard.json');
+        this.load.atlas('guard','assets/gfx/guzzard.png','assets/gfx/guard.json');
         this.load.atlas('fatguard','assets/gfx/fatguard.png','assets/gfx/fatguard.json');
         this.load.atlas('jaffar','assets/gfx/jaffar.png','assets/gfx/jaffar.json');
         this.load.atlas('skeleton','assets/gfx/skeleton.png','assets/gfx/skeleton.json');

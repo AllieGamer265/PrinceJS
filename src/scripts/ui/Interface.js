@@ -26,6 +26,36 @@ class Interface {
         this.oponent;
 
         this.scene.time.delayedCall(1500, this.showTimeLeft, [], this);
+
+        // Shoe color selector (4 sample colors)
+        this.shoeColors = [0xff0000, 0x00aaff, 0x00cc44, 0xffcc00];
+        this.shoeColorButtons = [];
+        const btnSize = 12;
+        const spacing = 4;
+        // Position buttons at top-right corner of UI area
+        const startX = SCREEN_WIDTH - (this.shoeColors.length * (btnSize + spacing)) - 8;
+        const startY = SCREEN_HEIGHT - UI_HEIGHT + 4;
+
+        this.shoeColors.forEach((color, idx) => {
+            const x = startX + idx * (btnSize + spacing);
+            const rect = this.scene.add.rectangle(x, startY, btnSize, btnSize, color).setOrigin(0,0).setScrollFactor(0).setInteractive({useHandCursor:true});
+            rect.on('pointerdown', () => {
+                GameState.kidShoeColor = idx;
+                if (this.player && typeof this.player.setShoeColor === 'function') this.player.setShoeColor(idx);
+                if (typeof GameState.save === 'function') GameState.save();
+                this._highlightShoeButton(idx);
+            });
+            this.uiLayer.add(rect);
+            this.shoeColorButtons.push(rect);
+        });
+        // highlight current selection
+        this._highlightShoeButton(GameState.kidShoeColor || 0);
+    }
+
+    _highlightShoeButton(index) {
+        this.shoeColorButtons.forEach((b, i) => {
+            b.setStrokeStyle(i === index ? 2 : 0, 0xffffff);
+        });
     }
 
     showTimeLeft() {
